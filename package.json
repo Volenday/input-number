@@ -1,6 +1,6 @@
 {
 	"name": "@volenday/input-number",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"author": "Rayan Feliciano <rayan.feliciano@volenday.com>",
 	"license": "MIT",
 	"private": false,
@@ -11,16 +11,18 @@
 	},
 	"main": "dist/index.min.js",
 	"peerDependencies": {
-		"@volenday/input-date": "^0.0.12",
-		"antd": "^3.20.1",
-		"cleave.js": "^1.5.2",
-		"react": "^16.8.6"
+		"@volenday/input-date": "^0.1.16",
+		"antd": "^3.22.2",
+		"cleave.js": "^1.5.3",
+		"react": "^16.9.0",
+		"validate.js": "^0.13.1"
 	},
 	"dependencies": {
-		"@volenday/input-date": "^0.0.12",
-		"antd": "^3.20.1",
-		"cleave.js": "^1.5.2",
-		"react": "^16.8.6",
+		"@volenday/input-date": "^0.1.16",
+		"antd": "^3.22.2",
+		"cleave.js": "^1.5.3",
+		"react": "^16.9.0",
+		"validate.js": "^0.13.1",
 		"webpack": "^4.35.3"
 	},
 	"devDependencies": {

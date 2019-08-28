@@ -1,11 +1,13 @@
 import Cleave from 'cleave.js/react';
 import React, { Component } from 'react';
 import InputDate from '@volenday/input-date';
+import validate from 'validate.js';
+import { Button, Form, InputNumber, Popover } from 'antd';
 
-// ant design
-import { Button, InputNum, Popover } from 'antd';
-export default class InputNumber extends Component {
-	initialState = { hasChange: false, isPopoverVisible: false, localValue: '', isFocused: false };
+import './styles.css';
+
+export default class InputNumber2 extends Component {
+	initialState = { errors: [], hasChange: false, isPopoverVisible: false, localValue: '', isFocused: false };
 	state = { ...this.initialState, initialState: this.initialState };
 
 	static getDerivedStateFromProps(nextProps, prevState) {
@@ -30,8 +32,32 @@ export default class InputNumber extends Component {
 		return null;
 	}
 
-	handleChange = val => {
-		this.setState({ localValue: val, hasChange: true });
+	onChange = async value => {
+		const { localValue } = this.state;
+		const { action, id, onChange, onValidate } = this.props;
+
+		if (localValue != '' && value == '') onChange(id, value);
+		const errors = this.validate(value);
+		await this.setState({ errors, localValue: value, hasChange: action === 'add' ? false : true });
+		if (onValidate) onValidate(id, errors);
+	};
+
+	validate = value => {
+		const { id, maximum, minimum, required = false } = this.props;
+
+		const constraints = {
+			[id]: {
+				numericality: {
+					onlyInteger: true,
+					greaterThanOrEqualTo: parseInt(minimum),
+					lessThanOrEqualTo: parseInt(maximum)
+				},
+				presence: { allowEmpty: !required }
+			}
+		};
+
+		const errors = validate({ [id]: value }, constraints);
+		return errors ? errors[id] : [];
 	};
 
 	handlePopoverVisible = visible => {
@@ -39,6 +65,7 @@ export default class InputNumber extends Component {
 	};
 
 	renderInput() {
+		const { localValue } = this.state;
 		const {
 			disabled = false,
 			format = [],
@@ -46,7 +73,6 @@ export default class InputNumber extends Component {
 			label = '',
 			onChange,
 			placeholder = '',
-			required = false,
 			styles = {},
 			value = ''
 		} = this.props;
@@ -58,61 +84,52 @@ export default class InputNumber extends Component {
 			return (
 				<Cleave
 					autoComplete="off"
-					class="form-control"
+					class="ant-input"
 					disabled={disabled}
 					name={id}
 					options={{ delimiters, blocks, numericOnly: true }}
-					placeholder={placeholder || label || id}
-					required={required}
-					style={styles}
 					onBlur={e => {
 						if (e.target.rawValue != value) onChange(id, e.target.rawValue);
-
 						this.setState({ isFocused: false });
 					}}
-					onChange={e => {
-						this.handleChange(e.target.rawValue);
-					}}
-					onFocus={e => {
-						this.setState({ isFocused: true });
-					}}
+					onChange={e => this.onChange(e.target.rawValue)}
+					onFocus={() => this.setState({ isFocused: true })}
 					onKeyPress={e => {
 						if (e.key === 'Enter') {
 							onChange(id, e.target.rawValue);
 							return true;
 						}
 					}}
-					value={this.state.localValue || ''}
+					placeholder={placeholder || label || id}
+					style={styles}
+					value={localValue ? localValue : ''}
 				/>
 			);
 		}
 
 		return (
-			<InputNum
+			<InputNumber
 				allowClear
 				autoComplete="off"
 				disabled={disabled}
 				name={id}
-				placeholder={placeholder || label || id}
-				required={required}
-				size="large"
-				style={styles}
 				onBlur={e => {
-					if (e != value) onChange(id, this.state.localValue);
+					const newValue = e.target.value.toString();
+					if (newValue != value) onChange(id, localValue);
 					this.setState({ isFocused: false });
 				}}
 				onChange={e => {
-					if (this.state.localValue != '' && e == '') onChange(id, e);
-					this.handleChange(e);
+					if (localValue != '' && e.toString() == '') onChange(id, e.toString());
+					this.onChange(e.toString());
 				}}
-				onFocus={e => {
-					this.setState({ isFocused: true });
-				}}
+				onFocus={() => this.setState({ isFocused: true })}
 				onPressEnter={e => {
 					onChange(id, e);
 					return true;
 				}}
-				value={this.state.localValue || ''}
+				placeholder={placeholder || label || id}
+				style={styles}
+				value={localValue != '' ? localValue : ''}
 			/>
 		);
 	}
@@ -152,44 +169,22 @@ export default class InputNumber extends Component {
 	};
 
 	render() {
-		const { hasChange } = this.state;
-		const { id, label = '', required = false, withLabel = false, historyTrack = false } = this.props;
+		const { errors, hasChange } = this.state;
+		const { action, label = '', required = false, withLabel = false, historyTrack = false } = this.props;
 
-		if (withLabel) {
-			if (historyTrack) {
-				return (
-					<div className="form-group">
-						<span class="float-left">
-							<label for={id}>{required ? `*${label}` : label}</label>
-						</span>
-						{hasChange && this.renderPopover()}
-						<br />
-						{this.renderInput()}
-					</div>
-				);
-			}
+		const formItemCommonProps = {
+			colon: false,
+			help: errors.length != 0 ? errors[0] : '',
+			label: withLabel ? label : false,
+			required,
+			validateStatus: errors.length != 0 ? 'error' : 'success'
+		};
 
-			return (
-				<div className="form-group">
-					<label for={id}>{required ? `*${label}` : label}</label>
-					<br />
-					{this.renderInput()}
-				</div>
-			);
-		} else {
-			if (historyTrack) {
-				return (
-					<div class="form-group">
-						{hasChange && this.renderPopover()}
-						<br />
-						{this.renderInput()}
-					</div>
-				);
-			}
-
-			return this.renderInput();
-		}
-
-		return null;
+		return (
+			<Form.Item {...formItemCommonProps}>
+				{historyTrack && hasChange && action !== 'add' && this.renderPopover()}
+				{this.renderInput()}
+			</Form.Item>
+		);
 	}
 }
