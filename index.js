@@ -71,7 +71,9 @@ export default class InputNumber2 extends Component {
 			format = [],
 			id,
 			label = '',
+			onBlur,
 			onChange,
+			onPressEnter,
 			placeholder = '',
 			styles = {},
 			value = ''
@@ -117,6 +119,7 @@ export default class InputNumber2 extends Component {
 					const newValue = e.target.value.toString();
 					if (newValue != value) onChange(id, localValue);
 					this.setState({ isFocused: false });
+					if (onBlur) onBlur(e);
 				}}
 				onChange={e => {
 					if (localValue != '' && e.toString() == '') onChange(id, e.toString());
@@ -125,6 +128,7 @@ export default class InputNumber2 extends Component {
 				onFocus={() => this.setState({ isFocused: true })}
 				onPressEnter={e => {
 					onChange(id, e);
+					if (onPressEnter) onPressEnter(e);
 					return true;
 				}}
 				placeholder={placeholder || label || id}
