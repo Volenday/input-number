@@ -7,38 +7,14 @@ import { Button, Form, InputNumber, Popover } from 'antd';
 import './styles.css';
 
 export default class InputNumber2 extends Component {
-	initialState = { errors: [], hasChange: false, isPopoverVisible: false, localValue: '', isFocused: false };
-	state = { ...this.initialState, initialState: this.initialState };
-
-	static getDerivedStateFromProps(nextProps, prevState) {
-		// Set initial localValue
-		if (nextProps.value && !prevState.localValue) {
-			return { ...prevState, localValue: nextProps.value };
-		}
-
-		// Resets equivalent value
-		if (prevState.localValue !== nextProps.value) {
-			// For Add
-			if (typeof nextProps.value === 'undefined' && !prevState.hasChange && !prevState.isFocused) {
-				return { ...prevState.initialState };
-			}
-
-			// For Edit
-			if (!prevState.isFocused) {
-				return { ...prevState.initialState, localValue: nextProps.value };
-			}
-		}
-
-		return null;
-	}
+	state = { errors: [], hasChange: false, isPopoverVisible: false };
 
 	onChange = async value => {
-		const { localValue } = this.state;
 		const { action, id, onChange, onValidate } = this.props;
 
-		if (localValue != '' && value == '') onChange(id, value);
+		onChange(id, value);
 		const errors = this.validate(value);
-		await this.setState({ errors, localValue: value, hasChange: action === 'add' ? false : true });
+		await this.setState({ errors, hasChange: action === 'add' ? false : true });
 		if (onValidate) onValidate(id, errors);
 	};
 
@@ -65,15 +41,13 @@ export default class InputNumber2 extends Component {
 	};
 
 	renderInput() {
-		const { localValue } = this.state;
 		const {
 			disabled = false,
 			format = [],
 			id,
 			label = '',
-			onBlur,
-			onChange,
-			onPressEnter,
+			onBlur = () => {},
+			onPressEnter = () => {},
 			placeholder = '',
 			styles = {},
 			value = ''
@@ -90,21 +64,16 @@ export default class InputNumber2 extends Component {
 					disabled={disabled}
 					name={id}
 					options={{ delimiters, blocks, numericOnly: true }}
-					onBlur={e => {
-						if (e.target.rawValue != value) onChange(id, e.target.rawValue);
-						this.setState({ isFocused: false });
-					}}
+					onBlur={onBlur}
 					onChange={e => this.onChange(e.target.rawValue)}
-					onFocus={() => this.setState({ isFocused: true })}
 					onKeyPress={e => {
 						if (e.key === 'Enter') {
-							onChange(id, e.target.rawValue);
-							return true;
+							onPressEnter(e);
 						}
 					}}
 					placeholder={placeholder || label || id}
 					style={styles}
-					value={localValue ? localValue : ''}
+					value={value}
 				/>
 			);
 		}
@@ -115,25 +84,12 @@ export default class InputNumber2 extends Component {
 				autoComplete="off"
 				disabled={disabled}
 				name={id}
-				onBlur={e => {
-					const newValue = e.target.value.toString();
-					if (newValue != value) onChange(id, localValue);
-					this.setState({ isFocused: false });
-					if (onBlur) onBlur(e);
-				}}
-				onChange={e => {
-					if (localValue != '' && e.toString() == '') onChange(id, e.toString());
-					this.onChange(e.toString());
-				}}
-				onFocus={() => this.setState({ isFocused: true })}
-				onPressEnter={e => {
-					onChange(id, e);
-					if (onPressEnter) onPressEnter(e);
-					return true;
-				}}
+				onBlur={onBlur}
+				onChange={e => this.onChange(e.toString())}
+				onPressEnter={onPressEnter}
 				placeholder={placeholder || label || id}
 				style={{ width: '100%', ...styles }}
-				value={localValue != '' ? localValue : ''}
+				value={value}
 			/>
 		);
 	}
