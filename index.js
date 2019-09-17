@@ -132,7 +132,7 @@ export default class InputNumber2 extends Component {
 					return true;
 				}}
 				placeholder={placeholder || label || id}
-				style={styles}
+				style={{ width: '100%', ...styles }}
 				value={localValue != '' ? localValue : ''}
 			/>
 		);
