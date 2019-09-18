@@ -8,10 +8,10 @@ import './styles.css';
 export default class InputNumber2 extends Component {
 	state = { errors: [] };
 
-	onChange = async value => {
+	onChange = async (e, value) => {
 		const { id, onChange, onValidate } = this.props;
 
-		onChange(id, value);
+		onChange(e, id, value);
 		const errors = this.validate(value);
 		await this.setState({ errors });
 		if (onValidate) onValidate(id, errors);
@@ -60,7 +60,7 @@ export default class InputNumber2 extends Component {
 					name={id}
 					options={{ delimiters, blocks, numericOnly: true }}
 					onBlur={onBlur}
-					onChange={e => this.onChange(e.target.rawValue)}
+					onChange={e => this.onChange(e, e.target.rawValue)}
 					onKeyPress={e => {
 						if (e.key === 'Enter') {
 							onPressEnter(e);
@@ -80,7 +80,7 @@ export default class InputNumber2 extends Component {
 				disabled={disabled}
 				name={id}
 				onBlur={onBlur}
-				onChange={e => this.onChange(e.toString())}
+				onChange={e => this.onChange({ target: { name: id, value: e.toString() } }, e.toString())}
 				onPressEnter={onPressEnter}
 				placeholder={placeholder || label || id}
 				style={{ width: '100%', ...styles }}
