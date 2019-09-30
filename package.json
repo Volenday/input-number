@@ -1,6 +1,6 @@
 {
 	"name": "@volenday/input-number",
-	"version": "0.1.10",
+	"version": "0.1.11",
 	"main": "dist/index.min.js",
 	"repository": "https://jeromemiranda@bitbucket.org/volenday-dev/input-number",
 	"author": "Volenday <developers@volenday.com>",
@@ -14,14 +14,12 @@
 	"peerDependencies": {
 		"antd": "~3.23.3",
 		"cleave.js": "^1.5.3",
-		"react": "^16.9.0",
-		"validate.js": "^0.13.1"
+		"react": "^16.9.0"
 	},
 	"dependencies": {
 		"antd": "~3.23.3",
 		"cleave.js": "^1.5.3",
 		"react": "^16.9.0",
-		"validate.js": "^0.13.1",
 		"webpack": "~4.40.2"
 	},
 	"devDependencies": {

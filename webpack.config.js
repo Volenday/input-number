@@ -55,8 +55,7 @@ module.exports = {
 	externals: {
 		antd: 'commonjs2 antd',
 		'cleave.js': 'commonjs2 cleave.js',
-		react: 'commonjs2 react',
-		'validate.js': 'commonjs2 validate.js'
+		react: 'commonjs2 react'
 	},
 	plugins: [
 		new webpack.optimize.AggressiveMergingPlugin(),
