@@ -37,7 +37,7 @@ export default class InputNumber2 extends Component {
 					name={id}
 					options={{ delimiters, blocks, numericOnly: true }}
 					onBlur={onBlur}
-					onChange={e => this.onChange(e, e.target.rawValue)}
+					onChange={e => this.onChange({ target: { name: id, value: e.target.rawValue } }, e.target.rawValue)}
 					onKeyPress={e => {
 						if (e.key === 'Enter') {
 							onPressEnter(e);
