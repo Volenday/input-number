@@ -53,9 +53,9 @@ module.exports = {
 		libraryTarget: 'commonjs2'
 	},
 	externals: {
-		antd: 'commonjs2 antd',
-		'cleave.js': 'commonjs2 cleave.js',
-		react: 'commonjs2 react'
+		antd: 'antd',
+		'cleave.js': 'cleave.js',
+		react: 'react'
 	},
 	plugins: [
 		new webpack.optimize.AggressiveMergingPlugin(),
