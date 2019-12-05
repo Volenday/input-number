@@ -52,7 +52,6 @@ export default class InputNumber2 extends Component {
 
 		return (
 			<InputNumber
-				allowClear
 				autoComplete="off"
 				disabled={disabled}
 				name={id}
