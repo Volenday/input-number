@@ -11,6 +11,7 @@ export default ({
 	id,
 	label = '',
 	onBlur = () => {},
+	onChange,
 	onPressEnter = () => {},
 	placeholder = '',
 	required = false,
