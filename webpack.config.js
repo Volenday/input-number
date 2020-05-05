@@ -55,6 +55,7 @@ module.exports = {
 	externals: {
 		antd: 'antd',
 		'cleave.js': 'cleave.js',
+		'cleave.js/react': 'cleave.js/react',
 		react: 'react'
 	},
 	plugins: [
