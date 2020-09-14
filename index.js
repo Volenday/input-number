@@ -1,5 +1,7 @@
 import React from 'react';
 import { Form } from 'antd';
+import Cleave from 'cleave.js/react';
+import CurrencyInput from 'react-currency-input';
 
 import './styles.css';
 
@@ -21,7 +23,29 @@ export default ({
 }) => {
 	const renderInput = () => {
 		if (format.length !== 0) {
-			const Cleave = require('cleave.js/react');
+			const withCurrency = !!format.filter(d => d.type === 'currency').length;
+
+			if (withCurrency) {
+				const { decimalSeparator, prefix, sign, suffix, thousandSeparator } = format[0];
+				return (
+					<CurrencyInput
+						className="ant-input"
+						decimalSeparator={decimalSeparator}
+						disabled={disabled}
+						name={id}
+						onBlur={onBlur}
+						onChangeEvent={(e, maskedvalue, floatvalue) =>
+							onChange({ target: { name: id, value: floatvalue } }, id, floatvalue)
+						}
+						onKeyPress={e => e.key === 'Enter' && onPressEnter(e)}
+						placeholder={placeholder || label || id}
+						prefix={prefix ? sign : ''}
+						suffix={suffix ? sign : ''}
+						thousandSeparator={thousandSeparator}
+						value={value}
+					/>
+				);
+			}
 
 			let blocks = format.map(d => parseInt(d.characterLength)),
 				delimiters = format.map(d => d.delimiter);
@@ -30,7 +54,7 @@ export default ({
 			return (
 				<Cleave
 					autoComplete="off"
-					class="ant-input"
+					className="ant-input"
 					disabled={disabled}
 					name={id}
 					options={{ delimiters, blocks, numericOnly: true }}

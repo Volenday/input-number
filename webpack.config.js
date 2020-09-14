@@ -56,7 +56,8 @@ module.exports = {
 		antd: 'antd',
 		'cleave.js': 'cleave.js',
 		'cleave.js/react': 'cleave.js/react',
-		react: 'react'
+		react: 'react',
+		'react-currency-input': 'react-currency-input'
 	},
 	plugins: [
 		new webpack.optimize.AggressiveMergingPlugin(),
