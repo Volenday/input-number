@@ -1,9 +1,9 @@
 import React from 'react';
-import { Form } from 'antd';
-import Cleave from 'cleave.js/react';
-import CurrencyInput from 'react-currency-input';
+import { Form, Skeleton } from 'antd';
 
 import './styles.css';
+
+const browser = typeof process.browser !== 'undefined' ? process.browser : true;
 
 export default ({
 	disabled = false,
@@ -26,6 +26,8 @@ export default ({
 			const withCurrency = !!format.filter(d => d.type === 'currency').length;
 
 			if (withCurrency) {
+				const CurrencyInput = require('react-currency-input');
+
 				const { decimalSeparator, prefix, sign, suffix, thousandSeparator } = format[0];
 				return (
 					<CurrencyInput
@@ -50,6 +52,8 @@ export default ({
 			let blocks = format.map(d => parseInt(d.characterLength)),
 				delimiters = format.map(d => d.delimiter);
 			delimiters.pop();
+
+			const Cleave = require('cleave.js/react');
 
 			return (
 				<Cleave
@@ -101,5 +105,9 @@ export default ({
 		validateStatus: error ? 'error' : 'success'
 	};
 
-	return <Form.Item {...formItemCommonProps}>{renderInput()}</Form.Item>;
+	return (
+		<Form.Item {...formItemCommonProps}>
+			{browser ? renderInput() : <Skeleton active paragraph={{ rows: 1, width: '100%' }} title={false} />}
+		</Form.Item>
+	);
 };
