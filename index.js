@@ -26,8 +26,7 @@ export default ({
 			const withCurrency = !!format.filter(d => d.type === 'currency').length;
 
 			if (withCurrency) {
-				const CurrencyInput = require('react-currency-input');
-
+				const CurrencyInput = require('react-currency-input').default;
 				const { decimalSeparator, prefix, sign, suffix, thousandSeparator } = format[0];
 				return (
 					<CurrencyInput
