@@ -15,3 +15,7 @@
 .ant-input-number-handler-wrap {
     display: none;
 }
+
+.ant-form-vertical .ant-form-item {
+	margin-bottom: 0px;
+}
