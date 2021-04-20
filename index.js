@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Skeleton } from 'antd';
+import { Form, Skeleton, Tooltip } from 'antd';
 
 const browser = typeof window !== 'undefined' ? true : false;
 
@@ -18,6 +18,7 @@ export default ({
 	placeholder = '',
 	required = false,
 	styles = {},
+	toolTip = {},
 	value = '',
 	withLabel = false
 }) => {
@@ -28,7 +29,8 @@ export default ({
 			if (withCurrency) {
 				const CurrencyInput = require('react-currency-input').default;
 				const { decimalSeparator, prefix, sign, suffix, thousandSeparator } = format[0];
-				return (
+
+				const currencyInput = (
 					<CurrencyInput
 						className="ant-input"
 						decimalSeparator={decimalSeparator}
@@ -46,6 +48,12 @@ export default ({
 						value={value}
 					/>
 				);
+
+				return Object.keys(toolTip).length === 0 ? (
+					currencyInput
+				) : (
+					<Tooltip {...toolTip}>{currencyInput}</Tooltip>
+				);
 			}
 
 			let blocks = format.map(d => parseInt(d.characterLength)),
@@ -54,7 +62,7 @@ export default ({
 
 			const Cleave = require('cleave.js/react');
 
-			return (
+			const cleave = (
 				<Cleave
 					autoComplete="off"
 					className="ant-input"
@@ -71,11 +79,13 @@ export default ({
 					value={value}
 				/>
 			);
+
+			return Object.keys(toolTip).length === 0 ? cleave : <Tooltip {...toolTip}>{cleave}</Tooltip>;
 		}
 
 		const { InputNumber } = require('antd');
 
-		return (
+		const inputNumber = (
 			<InputNumber
 				autoComplete="off"
 				disabled={disabled}
@@ -88,6 +98,7 @@ export default ({
 				value={value}
 			/>
 		);
+		return Object.keys(toolTip).length === 0 ? inputNumber : <Tooltip {...toolTip}>{inputNumber}</Tooltip>;
 	};
 
 	const formItemCommonProps = {
