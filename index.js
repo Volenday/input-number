@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form, Skeleton, Tooltip } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
 const browser = typeof window !== 'undefined' ? true : false;
 
@@ -18,7 +19,7 @@ export default ({
 	placeholder = '',
 	required = false,
 	styles = {},
-	toolTip = {},
+	toolTip = '',
 	value = '',
 	withLabel = false
 }) => {
@@ -30,7 +31,7 @@ export default ({
 				const CurrencyInput = require('react-currency-input').default;
 				const { decimalSeparator, prefix, sign, suffix, thousandSeparator } = format[0];
 
-				const currencyInput = (
+				return (
 					<CurrencyInput
 						className="ant-input"
 						decimalSeparator={decimalSeparator}
@@ -48,12 +49,6 @@ export default ({
 						value={value}
 					/>
 				);
-
-				return Object.keys(toolTip).length === 0 ? (
-					currencyInput
-				) : (
-					<Tooltip {...toolTip}>{currencyInput}</Tooltip>
-				);
 			}
 
 			let blocks = format.map(d => parseInt(d.characterLength)),
@@ -62,7 +57,7 @@ export default ({
 
 			const Cleave = require('cleave.js/react');
 
-			const cleave = (
+			return (
 				<Cleave
 					autoComplete="off"
 					className="ant-input"
@@ -79,13 +74,11 @@ export default ({
 					value={value}
 				/>
 			);
-
-			return Object.keys(toolTip).length === 0 ? cleave : <Tooltip {...toolTip}>{cleave}</Tooltip>;
 		}
 
 		const { InputNumber } = require('antd');
 
-		const inputNumber = (
+		return (
 			<InputNumber
 				autoComplete="off"
 				disabled={disabled}
@@ -98,7 +91,6 @@ export default ({
 				value={value}
 			/>
 		);
-		return Object.keys(toolTip).length === 0 ? inputNumber : <Tooltip {...toolTip}>{inputNumber}</Tooltip>;
 	};
 
 	const formItemCommonProps = {
@@ -106,7 +98,15 @@ export default ({
 		help: error ? error : '',
 		label: withLabel ? (
 			<>
-				<div style={{ float: 'right' }}>{extra}</div> <span class="label">{label}</span>
+				<div style={{ float: 'right' }}>{extra}</div>
+				<span class="label">
+					{label}{' '}
+					{toolTip && (
+						<Tooltip title={toolTip}>
+							<QuestionCircleOutlined />
+						</Tooltip>
+					)}
+				</span>
 			</>
 		) : (
 			false
