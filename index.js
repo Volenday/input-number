@@ -11,7 +11,7 @@ export default ({
 	extra = null,
 	format = [],
 	id,
-    inlineError = true,
+	inlineError = true,
 	label = '',
 	onBlur = () => {},
 	onChange,
@@ -82,7 +82,9 @@ export default ({
 				disabled={disabled}
 				name={id}
 				onBlur={onBlur}
-				onChange={e => onChange({ target: { name: id, value: e.toString() } }, id, e.toString())}
+				onChange={e => {
+					if (e) onChange({ target: { name: id, value: e.toString() } }, id, e.toString());
+				}}
 				onPressEnter={onPressEnter}
 				placeholder={placeholder || label || id}
 				style={{ width: '100%', ...styles }}
@@ -104,7 +106,7 @@ export default ({
 		validateStatus: error ? 'error' : 'success'
 	};
 
-    if (inlineError) formItemCommonProps = { ...formItemCommonProps, help: error ? error : '' };
+	if (inlineError) formItemCommonProps = { ...formItemCommonProps, help: error ? error : '' };
 	return (
 		<Form.Item {...formItemCommonProps}>
 			{browser ? renderInput() : <Skeleton active paragraph={{ rows: 1, width: '100%' }} title={false} />}
