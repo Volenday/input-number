@@ -83,7 +83,7 @@ export default ({
 				name={id}
 				onBlur={onBlur}
 				onChange={e => {
-					if (e) onChange({ target: { name: id, value: e.toString() } }, id, e.toString());
+					if (e || e === 0) onChange({ target: { name: id, value: e.toString() } }, id, e.toString());
 				}}
 				onPressEnter={onPressEnter}
 				placeholder={placeholder || label || id}
